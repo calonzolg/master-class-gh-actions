@@ -1,0 +1,53 @@
+name: Learn Github Actions with Silva
+run-name: I'm learning - second example - triggers
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "**.py"
+  issues:
+    types:
+      - labeled
+  workflow_dispatch:
+    inputs:
+      favorite_language:
+        description: "Favorite language"
+        default: Python
+        required: true
+        type: choice
+        options:
+          - Python
+          - JavaScript
+      name:
+        description: "Name"
+        required: true
+        type: string
+        default: Ernesto
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+    hello-world-manual:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Definir variable
+          run: echo "USERNAME=${{ inputs.name }}" >> $GITHUB_ENV
+        - name: Definir language
+          run: echo "LANGUAGE=${{ inputs.favorite_language }}" >> $GITHUB_ENV
+        - name: Run Script
+          run: python hello-world.py
+    hellow-world:
+      if: ${{github.event_name != 'workflow_dispatch'}}
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Definir variable
+          run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+        - name: Run Script
+          run: python hello-world.py
