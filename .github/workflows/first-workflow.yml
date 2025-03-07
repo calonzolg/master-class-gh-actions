@@ -1,0 +1,14 @@
+name: Learn Github Actions with Silva
+run-name: I'm learning - first example
+on: [push]
+
+jobs:
+    hello-world:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Definir variable
+          run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
+        - name: Run Script
+          run: python hello-world.py
